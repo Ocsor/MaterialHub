@@ -29,24 +29,23 @@
 
 <div class="table-wrap">
   <table class="materials-table">
-    <thead><tr><th>SKU</th><th>Name</th><th>Size</th><th>Thickness</th><th>Matex</th><th>Prepit</th><th>IMP</th></tr></thead>
+    <thead><tr><th>SKU</th><th>Name</th><th>Matex</th><th>Prepit</th><th>IMP</th></tr></thead>
     <tbody>
     {% for m in materials %}
       {% set edit_url = '/materials/' ~ m.id ~ '/edit' %}
+      {% set display_name = m.friendly_name or m.name %}
       <tr>
         <td class="strong"><a class="cell-link" href="{{ edit_url }}"><span class="sku-pill">{{ m.sku or '—' }}</span></a></td>
-        <td class="strong"><a class="cell-link" href="{{ edit_url }}">{{ m.name }}</a></td>
-        <td class="size"><a class="cell-link" href="{{ edit_url }}">{% if m.width_mm is not none %}{{ m.width_mm|int if m.width_mm == m.width_mm|int else m.width_mm }}{% if m.height_mm is not none %} × {{ m.height_mm|int if m.height_mm == m.height_mm|int else m.height_mm }}{% elif m.length_mm is not none %} × {{ m.length_mm|int if m.length_mm == m.length_mm|int else m.length_mm }}{% endif %} {{ m.size_unit or 'mm' }}{% elif m.size_string and m.size_string != 'Unit' %}{{ m.size_string }}{% else %}—{% endif %}</a></td>
-        <td class="size"><a class="cell-link" href="{{ edit_url }}">{% if m.thickness_mm is not none %}{{ m.thickness_mm|int if m.thickness_mm == m.thickness_mm|int else m.thickness_mm }} mm{% else %}—{% endif %}</a></td>
+        <td class="strong material-name-cell"><a class="cell-link" href="{{ edit_url }}"><span class="material-name-line"><span>{{ display_name }}</span>{% if m.thickness_mm is not none %}<span class="thickness-pill">{{ m.thickness_mm|int if m.thickness_mm == m.thickness_mm|int else m.thickness_mm }} mm</span>{% endif %}</span><span class="material-size">{% if m.width_mm is not none %}{{ m.width_mm|int if m.width_mm == m.width_mm|int else m.width_mm }}{% if m.height_mm is not none %} × {{ m.height_mm|int if m.height_mm == m.height_mm|int else m.height_mm }}{% elif m.length_mm is not none %} × {{ m.length_mm|int if m.length_mm == m.length_mm|int else m.length_mm }}{% endif %} {{ m.size_unit or 'mm' }}{% elif m.size_string and m.size_string != 'Unit' %}{{ m.size_string }}{% else %}Size unavailable{% endif %}</span></a></td>
         <td>
           <form id="inline-{{ m.id }}" action="/materials/{{ m.id }}/inline" method="post"></form>
-          <input class="inline-text" form="inline-{{ m.id }}" name="matex" value="{{ m.matex or '' }}" onchange="this.form.requestSubmit()" aria-label="Matex for {{ m.name }}">
+          <input class="inline-text" form="inline-{{ m.id }}" name="matex" value="{{ m.matex or '' }}" onchange="this.form.requestSubmit()" aria-label="Matex for {{ display_name }}">
         </td>
-        <td class="check-cell"><input type="checkbox" form="inline-{{ m.id }}" name="prepit" value="1" onchange="this.form.requestSubmit()" {% if m.prepit %}checked{% endif %} aria-label="Prepit for {{ m.name }}"></td>
-        <td class="check-cell"><input type="checkbox" form="inline-{{ m.id }}" name="imp" value="1" onchange="this.form.requestSubmit()" {% if m.imp %}checked{% endif %} aria-label="IMP for {{ m.name }}"></td>
+        <td class="check-cell"><input type="checkbox" form="inline-{{ m.id }}" name="prepit" value="1" onchange="this.form.requestSubmit()" {% if m.prepit %}checked{% endif %} aria-label="Prepit for {{ display_name }}"></td>
+        <td class="check-cell"><input type="checkbox" form="inline-{{ m.id }}" name="imp" value="1" onchange="this.form.requestSubmit()" {% if m.imp %}checked{% endif %} aria-label="IMP for {{ display_name }}"></td>
       </tr>
     {% else %}
-      <tr><td colspan="7" class="empty">No materials match these filters.</td></tr>
+      <tr><td colspan="5" class="empty">No materials match these filters.</td></tr>
     {% endfor %}
     </tbody>
   </table>

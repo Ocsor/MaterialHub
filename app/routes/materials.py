@@ -16,6 +16,25 @@ router = APIRouter(tags=["admin"])
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 
+def _adjacent_material_ids(db: Session, material_id: int) -> tuple[int | None, int | None]:
+    """Return the previous and next IDs in the administrator list order."""
+    ordered_ids = list(db.scalars(
+        select(Material.id).order_by(
+            Material.sort_order,
+            Material.friendly_name,
+            Material.name,
+            Material.id,
+        )
+    ))
+    try:
+        position = ordered_ids.index(material_id)
+    except ValueError:
+        return None, None
+    previous_id = ordered_ids[position - 1] if position > 0 else None
+    next_id = ordered_ids[position + 1] if position + 1 < len(ordered_ids) else None
+    return previous_id, next_id
+
+
 @router.get("/materials")
 def materials_page(request: Request, q: str = "", kind: str = "all", status: str = "active", db: Session = Depends(get_db)):
     statement = select(Material)
@@ -49,7 +68,12 @@ def edit_page(material_id: int, request: Request, db: Session = Depends(get_db))
     material = db.get(Material, material_id)
     if material is None:
         raise HTTPException(status_code=404, detail="Material not found")
-    return templates.TemplateResponse(request, "edit_material.html", {"material": material})
+    previous_id, next_id = _adjacent_material_ids(db, material_id)
+    return templates.TemplateResponse(request, "edit_material.html", {
+        "material": material,
+        "previous_id": previous_id,
+        "next_id": next_id,
+    })
 
 
 @router.post("/materials/{material_id}/edit")
@@ -58,6 +82,7 @@ def save_material(
     friendly_name: Annotated[str, Form()] = "", matex: Annotated[str, Form()] = "",
     prepit: Annotated[str, Form()] = "", imp: Annotated[str, Form()] = "",
     notes: Annotated[str, Form()] = "",
+    navigation: Annotated[str, Form()] = "save",
     db: Session = Depends(get_db),
 ):
     material = db.get(Material, material_id)
@@ -66,6 +91,14 @@ def save_material(
     for field, value in {"friendly_name": friendly_name, "matex": matex, "prepit": prepit, "imp": imp, "notes": notes}.items():
         setattr(material, field, value.strip() or None)
     db.commit()
+
+    # Navigation is resolved after saving, so every button safely preserves the
+    # current form before moving away from it.
+    previous_id, next_id = _adjacent_material_ids(db, material_id)
+    if navigation == "previous" and previous_id is not None:
+        return RedirectResponse(f"/materials/{previous_id}/edit", status_code=303)
+    if navigation == "next" and next_id is not None:
+        return RedirectResponse(f"/materials/{next_id}/edit", status_code=303)
     return RedirectResponse("/materials", status_code=303)
 
 

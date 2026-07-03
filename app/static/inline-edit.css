@@ -1,5 +1,5 @@
 main {
-  max-width: 1320px;
+  max-width: 1050px;
 }
 
 .sku-pill {
@@ -9,16 +9,41 @@ main {
   border-radius: 999px;
   background: #edf2ff;
   color: #2446a8;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 700;
   line-height: 1.2;
 }
 
 .materials-table th:nth-child(2),
 .materials-table td:nth-child(2) {
-  width: 34%;
-  min-width: 320px;
+  width: 62%;
+  min-width: 400px;
   max-width: none;
+}
+
+.material-name-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.thickness-pill {
+  flex: 0 0 auto;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #e9edf4;
+  color: #536077;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+.material-size {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .materials-table tbody tr:nth-child(even) {
@@ -61,6 +86,25 @@ input,
 select,
 textarea {
   font-family: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+}
+
+.record-position {
+  max-width: 45%;
+  color: var(--muted);
+  text-align: right;
+}
+
+.edit-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.edit-navigation button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 .inline-text {
