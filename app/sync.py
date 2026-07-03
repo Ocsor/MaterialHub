@@ -1,6 +1,7 @@
 """Synchronise remote stock into the local material catalogue."""
 
 import json
+import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
@@ -12,6 +13,10 @@ from .models import Material
 from .stocktopus_client import StocktopusClient
 
 ALLOWED_SIZE_TYPES = {r"App\Models\Sheet", r"App\Models\Roll"}
+
+# Canonical Matex values used only when a material is first imported. Matching
+# is case-insensitive, while these spellings are what get stored locally.
+MATEX_NAME_KEYWORDS = ("White", "Black", "Clear", "Opal", "MDF", "Plywood", "Slate", "Frosted")
 
 
 @dataclass
@@ -59,6 +64,28 @@ def _remote_fields(item: dict[str, Any], now: datetime) -> dict[str, Any]:
     }
 
 
+def _initial_local_fields(name: str) -> dict[str, str | None]:
+    """Create defaults for local fields on a brand-new material.
+
+    A non-alphanumeric boundary is used instead of ``\b`` so Stocktopus names
+    such as ``ACM Black_3mm`` correctly recognise Black next to an underscore.
+    Multiple keyword matches are deliberately ambiguous and leave Matex blank.
+    """
+    matches = [
+        keyword
+        for keyword in MATEX_NAME_KEYWORDS
+        if re.search(
+            rf"(?<![A-Za-z0-9]){re.escape(keyword)}(?![A-Za-z0-9])",
+            name,
+            flags=re.IGNORECASE,
+        )
+    ]
+    return {
+        "friendly_name": name,
+        "matex": matches[0] if len(matches) == 1 else None,
+    }
+
+
 async def synchronise_materials(db: Session, client: StocktopusClient | None = None) -> SyncResult:
     """Download, upsert, and deactivate materials in one transaction."""
     stock = await (client or StocktopusClient()).fetch_all_stock()
@@ -76,7 +103,13 @@ async def synchronise_materials(db: Session, client: StocktopusClient | None = N
             seen.add(stock_id)
             material = existing.get(stock_id)
             if material is None:
-                db.add(Material(**fields, first_seen_at=now))
+                db.add(
+                    Material(
+                        **fields,
+                        **_initial_local_fields(fields["name"]),
+                        first_seen_at=now,
+                    )
+                )
                 result.imported += 1
             else:
                 for field, value in fields.items():

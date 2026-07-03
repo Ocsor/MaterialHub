@@ -23,7 +23,13 @@ uvicorn app.main:app --reload
 
 Open <http://127.0.0.1:8000/materials>. The database and table are created automatically at startup. API documentation is available at <http://127.0.0.1:8000/docs>.
 
-To synchronise, select **Sync from Stocktopus** on the materials page. This calls every `/stock` page with 100 records per page. Sheet and Roll records are inserted or refreshed, missing records are marked inactive, and local fields are never overwritten.
+To synchronise, select **Sync from Stocktopus** on the materials page. This calls every `/stock` page with 100 records per page. Sheet and Roll records are inserted or refreshed, missing records are marked inactive, and local fields are never overwritten. New records start with Friendly Name copied from Name; Matex is inferred when the name contains exactly one configured material keyword.
+
+To apply these defaults to blank fields in an existing database without overwriting local edits, run:
+
+```powershell
+python -m app.backfill
+```
 
 ## Database
 
