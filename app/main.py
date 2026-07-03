@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -21,6 +22,16 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="MaterialHub", version="1.0.0", lifespan=lifespan)
+# CEP panels run in an embedded browser and are a different origin from the
+# MaterialHub server. The public API is read-only, so allowing LAN clients to
+# make cross-origin requests is appropriate here. No credentials are accepted.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["GET"],
+    allow_headers=["*"],
+)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.include_router(materials.router)
 app.include_router(api.router)
@@ -30,3 +41,9 @@ app.include_router(sync.router)
 @app.get("/", include_in_schema=False)
 def home():
     return RedirectResponse("/materials")
+
+
+@app.get("/api/health", tags=["system"])
+def health():
+    """Lightweight connectivity check for plugins and other clients."""
+    return {"status": "ok", "service": "MaterialHub"}
