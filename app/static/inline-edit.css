@@ -1,0 +1,132 @@
+main {
+  max-width: 1320px;
+}
+
+.sku-pill {
+  display: inline-block;
+  padding: 4px 9px;
+  border: 1px solid #cbd7f5;
+  border-radius: 999px;
+  background: #edf2ff;
+  color: #2446a8;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.materials-table th:nth-child(2),
+.materials-table td:nth-child(2) {
+  width: 34%;
+  min-width: 320px;
+  max-width: none;
+}
+
+.materials-table tbody tr:nth-child(even) {
+  background: #f5f8fc;
+}
+
+.materials-table tbody tr:nth-child(odd) {
+  background: #fff;
+}
+
+.materials-table tbody tr:hover {
+  background: #e7eefc;
+}
+
+.table-wrap[aria-busy="true"] {
+  opacity: 0.55;
+  transition: opacity 120ms ease;
+}
+
+.materials-table tbody tr,
+.materials-table tbody td {
+  transition: background-color 140ms ease;
+}
+
+.cell-link {
+  display: block;
+  margin: -13px -12px;
+  padding: 13px 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cell-link:hover {
+  color: var(--brand);
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+}
+
+.inline-text {
+  width: 140px;
+  min-width: 0;
+  padding: 6px 8px;
+}
+
+@media (max-width: 900px) {
+  main {
+    max-width: none;
+  }
+}
+
+.inline-order {
+  width: 64px;
+  padding: 6px 7px;
+}
+
+.check-cell {
+  text-align: center;
+}
+
+.check-cell input,
+.check-field input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+
+.inline-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.save-small {
+  padding: 6px 9px;
+  background: var(--brand);
+  border-color: var(--brand);
+  color: white;
+}
+
+.check-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.form .check-field {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8f9fb;
+}
+
+.form .check-field input {
+  margin: 0;
+}
+
+.size {
+  font-variant-numeric: tabular-nums;
+}

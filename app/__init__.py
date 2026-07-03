@@ -1,0 +1,1 @@
+"""MaterialHub application package."""
