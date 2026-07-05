@@ -25,6 +25,10 @@ class MaterialResponse(BaseModel):
     prepit: str | None
     imp: str | None
     notes: str | None
+    keywords: str | None
+    primary_cutter: str | None
+    primary_tool: str | None
+    tool_tips: str | None
 
     @computed_field
     @property

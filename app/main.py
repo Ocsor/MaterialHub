@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 
 load_dotenv()
 
-from .database import Base, engine  # noqa: E402 - environment is loaded first
+from .database import Base, add_missing_material_columns, engine  # noqa: E402 - environment is loaded first
 from .main_paths import STATIC_DIR  # noqa: E402
 from .routes import api, materials, sync  # noqa: E402
 
@@ -18,6 +18,7 @@ from .routes import api, materials, sync  # noqa: E402
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
+    add_missing_material_columns()
     yield
 
 

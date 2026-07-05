@@ -68,6 +68,10 @@ def lookup_materials(
                 Material.name.ilike(term),
                 Material.sku.ilike(term),
                 Material.matex.ilike(term),
+                Material.keywords.ilike(term),
+                Material.primary_cutter.ilike(term),
+                Material.primary_tool.ilike(term),
+                Material.tool_tips.ilike(term),
             ))
         statement = statement.where(and_(*word_matches))
 

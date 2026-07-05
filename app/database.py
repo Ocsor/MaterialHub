@@ -3,7 +3,7 @@
 from collections.abc import Generator
 from pathlib import Path
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -17,6 +17,21 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False
 
 class Base(DeclarativeBase):
     """Base class shared by all database models."""
+
+
+def add_missing_material_columns() -> None:
+    """Add local enrichment columns to databases created by older versions."""
+    existing = {column["name"] for column in inspect(engine).get_columns("materials")}
+    additions = {
+        "keywords": "TEXT",
+        "primary_cutter": "TEXT",
+        "primary_tool": "TEXT",
+        "tool_tips": "TEXT",
+    }
+    with engine.begin() as connection:
+        for name, column_type in additions.items():
+            if name not in existing:
+                connection.execute(text(f"ALTER TABLE materials ADD COLUMN {name} {column_type}"))
 
 
 def get_db() -> Generator[Session, None, None]:

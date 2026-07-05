@@ -49,6 +49,8 @@ def materials_page(request: Request, q: str = "", kind: str = "all", status: str
                 Material.name.ilike(term), Material.friendly_name.ilike(term), Material.sku.ilike(term),
                 Material.supplier_name.ilike(term), Material.matex.ilike(term),
                 Material.prepit.ilike(term), Material.imp.ilike(term),
+                Material.keywords.ilike(term), Material.primary_cutter.ilike(term),
+                Material.primary_tool.ilike(term), Material.tool_tips.ilike(term),
             ))
         statement = statement.where(and_(*word_matches))
     if kind == "sheets":
@@ -82,13 +84,27 @@ def save_material(
     friendly_name: Annotated[str, Form()] = "", matex: Annotated[str, Form()] = "",
     prepit: Annotated[str, Form()] = "", imp: Annotated[str, Form()] = "",
     notes: Annotated[str, Form()] = "",
+    keywords: Annotated[str, Form()] = "",
+    primary_cutter: Annotated[str, Form()] = "",
+    primary_tool: Annotated[str, Form()] = "",
+    tool_tips: Annotated[str, Form()] = "",
     navigation: Annotated[str, Form()] = "save",
     db: Session = Depends(get_db),
 ):
     material = db.get(Material, material_id)
     if material is None:
         raise HTTPException(status_code=404, detail="Material not found")
-    for field, value in {"friendly_name": friendly_name, "matex": matex, "prepit": prepit, "imp": imp, "notes": notes}.items():
+    if primary_cutter not in {"", "CNC", "JWEI", "Laser"}:
+        raise HTTPException(status_code=422, detail="Invalid primary cutter")
+    if primary_cutter not in {"CNC", "JWEI"}:
+        primary_tool = ""
+    fields = {
+        "friendly_name": friendly_name, "matex": matex, "prepit": prepit,
+        "imp": imp, "notes": notes, "keywords": keywords,
+        "primary_cutter": primary_cutter, "primary_tool": primary_tool,
+        "tool_tips": tool_tips,
+    }
+    for field, value in fields.items():
         setattr(material, field, value.strip() or None)
     db.commit()
 

@@ -45,4 +45,8 @@ class Material(Base):
     prepit: Mapped[str | None] = mapped_column(Text)
     imp: Mapped[str | None] = mapped_column(Text)
     notes: Mapped[str | None] = mapped_column(Text)
+    keywords: Mapped[str | None] = mapped_column(Text)
+    primary_cutter: Mapped[str | None] = mapped_column(Text)
+    primary_tool: Mapped[str | None] = mapped_column(Text)
+    tool_tips: Mapped[str | None] = mapped_column(Text)
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
