@@ -1,6 +1,7 @@
 """Administrator-facing material list and edit routes."""
 
-from typing import Annotated
+import json
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request
 from fastapi.responses import RedirectResponse
@@ -14,6 +15,73 @@ from ..models import Material
 
 router = APIRouter(tags=["admin"])
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
+
+# This allow-list mirrors Reference/Requested.txt. Nested mappings keep useful
+# business data while excluding Stocktopus's internal IDs and metadata.
+STOCKTOPUS_VISIBLE_FIELDS: tuple[tuple[str, tuple[str, ...] | None], ...] = (
+    ("sku", None),
+    ("quantity", None),
+    ("name", None),
+    ("material_group", None),
+    ("material_type", None),
+    ("size", ("width", "height", "thickness")),
+    ("stock_prices", ("price", "supplier_ref")),
+    ("supplier", ("name", "rep", "rep_phone", "rep_email", "email", "phone", "account_type")),
+)
+
+
+def _display_value(value: Any) -> str:
+    """Format a scalar Stocktopus value consistently for the details panel."""
+    if value is None or value == "":
+        return "—"
+    if isinstance(value, bool):
+        return "Yes" if value else "No"
+    return str(value)
+
+
+def _display_field(name: str, value: Any) -> dict[str, str]:
+    return {
+        "name": "Thick" if name == "thickness" else name.replace("_", " ").title(),
+        "source_name": name,
+        "value": _display_value(value),
+    }
+
+
+def _stocktopus_fields(material: Material) -> list[dict[str, Any]]:
+    """Prepare the requested Stocktopus fields as individually styled values."""
+    try:
+        payload = json.loads(material.raw_stocktopus_json)
+    except (TypeError, ValueError):
+        return []
+    if not isinstance(payload, dict):
+        return []
+
+    fields = []
+    for name, nested_fields in STOCKTOPUS_VISIBLE_FIELDS:
+        value = payload.get(name)
+        if nested_fields is None:
+            fields.append({"kind": "value", **_display_field(name, value)})
+        elif isinstance(value, list):
+            items = [
+                [_display_field(child, item.get(child)) for child in nested_fields]
+                for item in value
+                if isinstance(item, dict)
+            ]
+            fields.append({
+                "kind": "collection",
+                "name": name.replace("_", " ").title(),
+                "source_name": name,
+                "items": items,
+            })
+        else:
+            nested_value = value if isinstance(value, dict) else {}
+            fields.append({
+                "kind": "group",
+                "name": name.replace("_", " ").title(),
+                "source_name": name,
+                "children": [_display_field(child, nested_value.get(child)) for child in nested_fields],
+            })
+    return fields
 
 
 def _adjacent_material_ids(db: Session, material_id: int) -> tuple[int | None, int | None]:
@@ -73,6 +141,7 @@ def edit_page(material_id: int, request: Request, db: Session = Depends(get_db))
     previous_id, next_id = _adjacent_material_ids(db, material_id)
     return templates.TemplateResponse(request, "edit_material.html", {
         "material": material,
+        "stocktopus_fields": _stocktopus_fields(material),
         "previous_id": previous_id,
         "next_id": next_id,
     })

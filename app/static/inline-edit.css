@@ -2,6 +2,10 @@ main {
   max-width: 1050px;
 }
 
+.edit-grid {
+  grid-template-columns: minmax(360px, .9fr) minmax(500px, 1.35fr);
+}
+
 .sku-pill {
   display: inline-block;
   padding: 4px 9px;
@@ -88,6 +92,12 @@ textarea {
   font-family: "Quicksand", ui-sans-serif, system-ui, sans-serif;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: #b4bcc9;
+  opacity: 1;
+}
+
 .record-position {
   max-width: 45%;
   color: var(--muted);
@@ -116,6 +126,10 @@ textarea {
 @media (max-width: 900px) {
   main {
     max-width: none;
+  }
+
+  .edit-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -173,4 +187,136 @@ textarea {
 
 .size {
   font-variant-numeric: tabular-nums;
+}
+
+.stocktopus-summary {
+  margin: -10px 0 16px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.stocktopus-fields {
+  display: block;
+}
+
+.stocktopus-overview,
+.stocktopus-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--line);
+}
+
+.stocktopus-field--name {
+  grid-column: 1 / -1;
+}
+
+.stocktopus-group--size .stocktopus-detail-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stocktopus-group--supplier .stocktopus-detail-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.stocktopus-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  min-width: 0;
+  border: 0;
+  background: #fff;
+  padding: 11px 12px;
+}
+
+.stocktopus-field dt {
+  display: block;
+  width: 100%;
+  padding: 0 0 3px;
+  border: 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.stocktopus-field dd {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow-wrap: anywhere;
+}
+
+.stocktopus-group {
+  margin-top: 22px;
+}
+
+.stocktopus-group h3 {
+  margin: 0 0 9px;
+  padding: 0;
+  border: 0;
+  color: var(--ink);
+  font-size: 12px;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.stocktopus-field.nested {
+  padding: 10px 12px;
+}
+
+.stocktopus-table-wrap {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.stocktopus-table {
+  table-layout: fixed;
+  white-space: normal;
+}
+
+.stocktopus-table th:first-child,
+.stocktopus-table td:first-child {
+  width: 82px;
+}
+
+.stocktopus-table th {
+  background: #f4f6fa;
+  padding: 8px 10px;
+}
+
+.stocktopus-table td {
+  padding: 10px;
+  vertical-align: top;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.stocktopus-table tbody tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.stocktopus-empty {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--muted);
+}
+
+@media (max-width: 480px) {
+  .stocktopus-overview,
+  .stocktopus-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stocktopus-group--size .stocktopus-detail-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }

@@ -3,20 +3,41 @@
 {% block content %}
 <a class="back" href="/materials">← Back to materials</a>
 <section class="heading">
-  <div><h1>Edit material</h1><p>Local fields are preserved whenever Stocktopus synchronises.</p></div>
-  <div class="record-position">{{ material.friendly_name or material.name }}</div>
+  <div><h1>Edit material</h1></div>
 </section>
 <div class="edit-grid">
   <section class="card">
     <h2>Stocktopus details</h2>
-    <dl>
-      <dt>Name</dt><dd>{{ material.name }}</dd>
-      <dt>SKU</dt><dd>{{ material.sku or '—' }}</dd>
-      <dt>Material group</dt><dd>{{ material.material_group or '—' }}</dd>
-      <dt>Material type</dt><dd>{{ material.material_type or '—' }}</dd>
-      <dt>Size</dt><dd>{{ material.size_string or '—' }}</dd>
-      <dt>Supplier</dt><dd>{{ material.supplier_name or '—' }}</dd>
-    </dl>
+    <div class="stocktopus-fields">
+      <div class="stocktopus-overview">
+      {% for field in stocktopus_fields %}
+        {% if field.kind == 'value' %}
+          <dl class="stocktopus-field stocktopus-field--{{ field.source_name|replace('_', '-') }}"><dt title="{{ field.source_name }}">{{ field.name }}</dt><dd>{{ field.value }}</dd></dl>
+        {% endif %}
+      {% endfor %}
+      </div>
+      {% for field in stocktopus_fields %}
+        {% if field.kind == 'group' %}
+          <section class="stocktopus-group stocktopus-group--{{ field.source_name|replace('_', '-') }}">
+            <h3 title="{{ field.source_name }}">{{ field.name }}</h3>
+            <div class="stocktopus-detail-grid">
+              {% for child in field.children %}<dl class="stocktopus-field nested"><dt title="{{ child.source_name }}">{{ child.name }}</dt><dd>{{ child.value }}</dd></dl>{% endfor %}
+            </div>
+          </section>
+        {% elif field.kind == 'collection' %}
+          <section class="stocktopus-group">
+            <h3 title="{{ field.source_name }}">{{ field.name }}</h3>
+            {% if field['items'] %}
+              <div class="stocktopus-table-wrap"><table class="stocktopus-table">
+                <thead><tr>{% for child in field['items'][0] %}<th>{{ child.name }}</th>{% endfor %}</tr></thead>
+                <tbody>{% for item in field['items'] %}<tr>{% for child in item %}<td>{{ child.value }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+              </table></div>
+            {% else %}<div class="stocktopus-empty">No entries</div>{% endif %}
+          </section>
+        {% endif %}
+      {% endfor %}
+      {% if not stocktopus_fields %}<dl class="stocktopus-field"><dt>Payload</dt><dd>Raw Stocktopus data is unavailable for this record.</dd></dl>{% endif %}
+    </div>
   </section>
   <form id="edit-material" class="card form" method="post">
     <h2>MaterialHub details</h2>

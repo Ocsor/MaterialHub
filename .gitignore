@@ -17,3 +17,6 @@ __pycache__/
 Thumbs.db
 # logs
 *.log
+
+# Other files
+Reference/
