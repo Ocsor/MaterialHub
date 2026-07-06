@@ -6,6 +6,11 @@ main {
   grid-template-columns: minmax(360px, .9fr) minmax(500px, 1.35fr);
 }
 
+.stocktopus-panel {
+  border-color: #cbd3df;
+  background: #e7ebf1;
+}
+
 .sku-pill {
   display: inline-block;
   padding: 4px 9px;
@@ -96,6 +101,10 @@ input::placeholder,
 textarea::placeholder {
   color: #b4bcc9;
   opacity: 1;
+}
+
+.form textarea {
+  resize: vertical;
 }
 
 .record-position {
@@ -299,8 +308,9 @@ textarea::placeholder {
   overflow-wrap: anywhere;
 }
 
-.stocktopus-table tbody tr:nth-child(even) {
-  background: #f8f9fb;
+.stocktopus-table tbody tr,
+.stocktopus-table tbody td {
+  background: #fff;
 }
 
 .stocktopus-empty {
