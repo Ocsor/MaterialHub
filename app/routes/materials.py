@@ -4,7 +4,7 @@ import json
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import Session
@@ -190,6 +190,7 @@ def save_material(
 @router.post("/materials/{material_id}/inline")
 def save_material_inline(
     material_id: int,
+    request: Request,
     matex: Annotated[str, Form()] = "",
     prepit: Annotated[str, Form()] = "",
     imp: Annotated[str, Form()] = "",
@@ -204,4 +205,6 @@ def save_material_inline(
     material.prepit = "1" if prepit else None
     material.imp = "1" if imp else None
     db.commit()
-    return RedirectResponse("/materials", status_code=303)
+    if request.headers.get("X-Requested-With") == "fetch":
+        return Response(status_code=204)
+    return RedirectResponse(request.headers.get("referer", "/materials"), status_code=303)

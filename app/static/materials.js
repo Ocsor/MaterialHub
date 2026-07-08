@@ -51,4 +51,35 @@ document.addEventListener("DOMContentLoaded", () => {
   form.querySelectorAll("select").forEach((select) => {
     select.addEventListener("change", refreshTable);
   });
+
+  document.addEventListener("change", async (event) => {
+    const control = event.target;
+    if (!(control instanceof HTMLInputElement) || !control.classList.contains("inline-save")) return;
+    const inlineForm = control.form;
+    if (!inlineForm) return;
+
+    const payload = new FormData(inlineForm);
+    const linkedControls = document.querySelectorAll(`[form="${inlineForm.id}"]`);
+    linkedControls.forEach((item) => {
+      if (item instanceof HTMLInputElement) item.disabled = true;
+    });
+
+    try {
+      const response = await fetch(inlineForm.action, {
+        method: inlineForm.method || "post",
+        body: payload,
+        headers: { "X-Requested-With": "fetch" },
+      });
+      if (!response.ok) throw new Error(`Inline save failed (${response.status})`);
+    } catch (error) {
+      console.error(error);
+      // If a save fails, refresh the visible filtered table from the server so
+      // the controls return to the persisted database state.
+      refreshTable();
+    } finally {
+      linkedControls.forEach((item) => {
+        if (item instanceof HTMLInputElement) item.disabled = false;
+      });
+    }
+  });
 });

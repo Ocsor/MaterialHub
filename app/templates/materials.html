@@ -39,10 +39,10 @@
         <td class="strong material-name-cell"><a class="cell-link" href="{{ edit_url }}"><span class="material-name-line"><span>{{ display_name }}</span>{% if m.thickness_mm is not none %}<span class="thickness-pill">{{ m.thickness_mm|int if m.thickness_mm == m.thickness_mm|int else m.thickness_mm }} mm</span>{% endif %}</span><span class="material-size">{% if m.width_mm is not none %}{{ m.width_mm|int if m.width_mm == m.width_mm|int else m.width_mm }}{% if m.height_mm is not none %} × {{ m.height_mm|int if m.height_mm == m.height_mm|int else m.height_mm }}{% elif m.length_mm is not none %} × {{ m.length_mm|int if m.length_mm == m.length_mm|int else m.length_mm }}{% endif %} {{ m.size_unit or 'mm' }}{% elif m.size_string and m.size_string != 'Unit' %}{{ m.size_string }}{% else %}Size unavailable{% endif %}</span></a></td>
         <td>
           <form id="inline-{{ m.id }}" action="/materials/{{ m.id }}/inline" method="post"></form>
-          <input class="inline-text" form="inline-{{ m.id }}" name="matex" value="{{ m.matex or '' }}" onchange="this.form.requestSubmit()" aria-label="Matex for {{ display_name }}">
+          <input class="inline-text inline-save" form="inline-{{ m.id }}" name="matex" value="{{ m.matex or '' }}" aria-label="Matex for {{ display_name }}">
         </td>
-        <td class="check-cell"><input type="checkbox" form="inline-{{ m.id }}" name="prepit" value="1" onchange="this.form.requestSubmit()" {% if m.prepit %}checked{% endif %} aria-label="Prepit for {{ display_name }}"></td>
-        <td class="check-cell"><input type="checkbox" form="inline-{{ m.id }}" name="imp" value="1" onchange="this.form.requestSubmit()" {% if m.imp %}checked{% endif %} aria-label="IMP for {{ display_name }}"></td>
+        <td class="check-cell"><input class="inline-save" type="checkbox" form="inline-{{ m.id }}" name="prepit" value="1" {% if m.prepit %}checked{% endif %} aria-label="Prepit for {{ display_name }}"></td>
+        <td class="check-cell"><input class="inline-save" type="checkbox" form="inline-{{ m.id }}" name="imp" value="1" {% if m.imp %}checked{% endif %} aria-label="IMP for {{ display_name }}"></td>
       </tr>
     {% else %}
       <tr><td colspan="5" class="empty">No materials match these filters.</td></tr>
@@ -50,5 +50,5 @@
     </tbody>
   </table>
 </div>
-<script src="{{ url_for('static', path='/materials.js') }}?v=2" defer></script>
+<script src="{{ url_for('static', path='/materials.js') }}?v=3" defer></script>
 {% endblock %}
