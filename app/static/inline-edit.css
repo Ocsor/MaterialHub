@@ -49,10 +49,10 @@ main {
 
 .material-size {
   display: block;
-  margin-top: 3px;
+  margin-top: 4px;
   color: var(--muted);
-  font-size: 11px;
-  font-weight: 500;
+  font-size: inherit;
+  font-weight: 400;
 }
 
 .materials-table tbody tr:nth-child(even) {

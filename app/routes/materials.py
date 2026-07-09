@@ -1,8 +1,12 @@
 """Administrator-facing material list and edit routes."""
 
-from io import BytesIO
+import csv
 import json
+import os
+from io import BytesIO, StringIO
+from pathlib import Path
 from typing import Annotated, Any
+from urllib.parse import urlencode
 from zipfile import ZIP_DEFLATED, ZipFile
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request
@@ -12,12 +16,29 @@ from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..main_paths import PREPIT_TEMPLATE_RULES_PATH, PREPIT_TEMPLATES_DIR, TEMPLATES_DIR
+from ..main_paths import PREPIT_TEMPLATE_RULES_PATH, PREPIT_TEMPLATES_DIR, ROOT_DIR, TEMPLATES_DIR
 from ..models import Material
 from ..prepit_export import PrepitExportError, build_prepit_xml
 
 router = APIRouter(tags=["admin"])
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
+
+IMP_CSV_COLUMNS = [
+    "Grade name",
+    "Paper weight",
+    "Caliper",
+    "Cost",
+    "Width/Grain",
+    "Height",
+    "Location",
+    "Inventory",
+    "Sheet size on order",
+    "Allowed folding depth",
+    "Requires UV drying",
+    "Different back finish",
+    "Cost per sheet",
+    "Mill",
+]
 
 # This allow-list mirrors Reference/Requested.txt. Nested mappings keep useful
 # business data while excluding Stocktopus's internal IDs and metadata.
@@ -138,28 +159,164 @@ def materials_page(request: Request, q: str = "", kind: str = "all", status: str
 
 @router.get("/materials/download/prepit")
 def download_prepit_zip(db: Session = Depends(get_db)):
-    rows = db.scalars(
-        select(Material)
-        .where(Material.prepit.is_not(None))
-        .order_by(Material.sort_order, Material.friendly_name, Material.name, Material.id)
-    ).all()
+    rows = _prepit_rows(db)
     if not rows:
         return RedirectResponse("/materials?error=No%20Prepit%20materials%20are%20checked", status_code=303)
 
-    archive = BytesIO()
-    used_filenames: set[str] = set()
     try:
-        with ZipFile(archive, "w", ZIP_DEFLATED) as zip_file:
-            for material in rows:
-                generated = build_prepit_xml(material, PREPIT_TEMPLATES_DIR, PREPIT_TEMPLATE_RULES_PATH)
-                filename = _unique_zip_filename(generated.filename, used_filenames)
-                zip_file.writestr(filename, generated.content)
+        archive = _prepit_zip(rows)
     except PrepitExportError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
     archive.seek(0)
     headers = {"Content-Disposition": 'attachment; filename="prepit_xml.zip"'}
     return StreamingResponse(archive, media_type="application/zip", headers=headers)
+
+
+@router.get("/materials/download/imp")
+def download_imp_csv(db: Session = Depends(get_db)):
+    rows = _imp_rows(db)
+    if not rows:
+        return RedirectResponse("/materials?error=No%20IMP%20materials%20are%20checked", status_code=303)
+
+    output = _imp_csv(rows)
+    headers = {"Content-Disposition": 'attachment; filename="imp_materials.csv"'}
+    return Response(content=output.getvalue(), media_type="text/csv", headers=headers)
+
+
+@router.post("/materials/export")
+def export_material_files(db: Session = Depends(get_db)):
+    export_path = _export_path()
+    prepit_rows = _prepit_rows(db)
+    imp_rows = _imp_rows(db)
+
+    try:
+        export_path.mkdir(parents=True, exist_ok=True)
+        (export_path / "prepit_xml.zip").write_bytes(_prepit_zip(prepit_rows).getvalue())
+        (export_path / "imp_materials.csv").write_text(_imp_csv(imp_rows).getvalue(), encoding="utf-8", newline="")
+        (export_path / "prepit_rolls.txt").write_text(
+            _prepit_name_list(prepit_rows, roll=True),
+            encoding="utf-8",
+            newline="",
+        )
+        (export_path / "prepit_sheets.txt").write_text(
+            _prepit_name_list(prepit_rows, roll=False),
+            encoding="utf-8",
+            newline="",
+        )
+    except PrepitExportError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except OSError as exc:
+        raise HTTPException(status_code=500, detail=f"Export failed: {exc}") from exc
+
+    query = urlencode({"notice": f"Exported files to {export_path}"})
+    return RedirectResponse(f"/materials?{query}", status_code=303)
+
+
+def _prepit_rows(db: Session) -> list[Material]:
+    return list(db.scalars(
+        select(Material)
+        .where(Material.prepit.is_not(None))
+        .order_by(Material.sort_order, Material.friendly_name, Material.name, Material.id)
+    ))
+
+
+def _imp_rows(db: Session) -> list[Material]:
+    return list(db.scalars(
+        select(Material)
+        .where(Material.imp.is_not(None))
+        .order_by(Material.sort_order, Material.friendly_name, Material.name, Material.id)
+    ))
+
+
+def _prepit_zip(rows: list[Material]) -> BytesIO:
+    archive = BytesIO()
+    used_filenames: set[str] = set()
+    with ZipFile(archive, "w", ZIP_DEFLATED) as zip_file:
+        for material in rows:
+            generated = build_prepit_xml(material, PREPIT_TEMPLATES_DIR, PREPIT_TEMPLATE_RULES_PATH)
+            filename = _unique_zip_filename(generated.filename, used_filenames)
+            zip_file.writestr(filename, generated.content)
+    archive.seek(0)
+    return archive
+
+
+def _imp_csv(rows: list[Material]) -> StringIO:
+    output = StringIO(newline="")
+    writer = csv.DictWriter(output, fieldnames=IMP_CSV_COLUMNS)
+    writer.writeheader()
+    for material in rows:
+        writer.writerow(_imp_csv_row(material))
+    return output
+
+
+def _prepit_name_list(rows: list[Material], roll: bool) -> str:
+    names = [_prepit_list_name(material) for material in rows if _is_roll_material(material) is roll]
+    return "\n".join(names) + ("\n" if names else "")
+
+
+def _prepit_list_name(material: Material) -> str:
+    sku = (material.sku or "").strip()
+    name = ((material.friendly_name or material.name) or "").strip()
+    if _is_roll_material(material):
+        width = _format_csv_number(material.width_mm)
+        size = f"{width}mm" if width else ""
+        return "_".join(part for part in [sku, name, size] if part)
+
+    thickness = _format_csv_number(material.thickness_mm)
+    width = _format_csv_number(material.width_mm)
+    height = _format_csv_number(material.height_mm)
+    size = f"{width}x{height}mm" if width or height else ""
+    return "_".join(part for part in [sku, name, thickness, size] if part)
+
+
+def _export_path() -> Path:
+    configured_path = os.getenv("MATERIALHUB_EXPORT_PATH", "").strip()
+    if not configured_path:
+        raise HTTPException(status_code=500, detail="MATERIALHUB_EXPORT_PATH is not set in .env")
+    path = Path(configured_path).expanduser()
+    return path if path.is_absolute() else ROOT_DIR / path
+
+
+def _imp_csv_row(material: Material) -> dict[str, str]:
+    is_roll = _is_roll_material(material)
+    return {
+        "Grade name": _imp_grade_name(material, is_roll),
+        "Paper weight": "0",
+        "Caliper": "0.1" if is_roll else _format_csv_number(material.thickness_mm),
+        "Cost": "8a",
+        "Width/Grain": _format_csv_number(material.width_mm),
+        "Height": "" if is_roll else _format_csv_number(material.height_mm),
+        "Location": "",
+        "Inventory": "",
+        "Sheet size on order": "",
+        "Allowed folding depth": "",
+        "Requires UV drying": "",
+        "Different back finish": "",
+        "Cost per sheet": "",
+        "Mill": material.supplier_name or "",
+    }
+
+
+def _imp_grade_name(material: Material, is_roll: bool) -> str:
+    sku = (material.sku or "").strip()
+    name = ((material.friendly_name or material.name) or "").strip()
+    width = _format_csv_number(material.width_mm)
+    if is_roll:
+        return "_".join(part for part in [sku, name, width] if part)
+    height = _format_csv_number(material.height_mm)
+    size = f"{width}x{height}mm" if width or height else ""
+    return "_".join(part for part in [sku, name, size] if part)
+
+
+def _format_csv_number(value: float | None) -> str:
+    if value is None:
+        return ""
+    return str(int(value)) if value == int(value) else f"{value:g}"
+
+
+def _is_roll_material(material: Material) -> bool:
+    return (material.material_type or "").casefold() == "roll" or material.size_type.endswith(r"\Roll")
 
 
 def _unique_zip_filename(filename: str, used_filenames: set[str]) -> str:
