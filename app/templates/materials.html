@@ -5,7 +5,8 @@
   <div><h1>Materials</h1><p id="result-count">{{ materials|length }} matching records</p></div>
   <div class="actions">
     <form action="/sync" method="post"><button class="primary">Sync</button></form>
-    <button type="button">Download</button>
+    <form action="/materials/download/prepit" method="get"><button type="submit">Prepit Download</button></form>
+    <button type="button">Imp Download</button>
   </div>
 </section>
 

@@ -1,0 +1,661 @@
+<?xml version="1.0"?>
+<ROLLWHITETEMPLATE>
+	<XMLFileLayoutVersion>1</XMLFileLayoutVersion>
+	<MediaName>Roll White Template</MediaName>
+	<MediaGroupName></MediaGroupName>
+	<VisibleInInterface>True</VisibleInInterface>
+	<MediaVersion>1</MediaVersion>
+	<Flags>0</Flags>
+	<MaterialType>0</MaterialType>
+	<HeaderString></HeaderString>
+	<EndString></EndString>
+	<OnJobLoad></OnJobLoad>
+	<OnMediaChange></OnMediaChange>
+	<MediaWidth Unit="micron">2000000</MediaWidth>
+	<MediaLength Unit="micron">10000000</MediaLength>
+	<MediaThickness Unit="mm">3</MediaThickness>
+	<ParkPositionX Unit="micron">649583</ParkPositionX>
+	<ParkPositionY Unit="micron">445688</ParkPositionY>
+	<Delimiter>
+		<NonFC>
+			<JobDelimiterType>0</JobDelimiterType>
+			<DistanceBetweenJob Unit="micron">1000</DistanceBetweenJob>
+			<CutOverSize Unit="micron">10000</CutOverSize>
+			<CutStartPoint Unit="micron">50000</CutStartPoint>
+			<DelimLayerName></DelimLayerName>
+			<CutDirection>0</CutDirection>
+			<FeedAfterCutOff>False</FeedAfterCutOff>
+		</NonFC>
+		<FC>
+			<KnifeHeight Unit="micron">200</KnifeHeight>
+			<CutOffStart Unit="micron">0</CutOffStart>
+			<SpeedWhenDown Unit="mm/s">500</SpeedWhenDown>
+			<AccelerationDown>3</AccelerationDown>
+		</FC>
+	</Delimiter>
+	<Layers>
+		<LayerCnt>5</LayerCnt>
+		<Layer0>
+			<Name>Regmarks</Name>
+			<LayerColour>-1</LayerColour>
+			<PenType>1000</PenType>
+			<BeforeLayer></BeforeLayer>
+			<BeforeLayerAfterUI></BeforeLayerAfterUI>
+			<AfterLayer></AfterLayer>
+			<PenSelect>1</PenSelect>
+			<SpeedDown Unit="mm/s">100</SpeedDown>
+			<SpeedUp Unit="mm/s">1000</SpeedUp>
+			<AccelerationDown>2</AccelerationDown>
+			<AccelerationUp>4</AccelerationUp>
+			<KnifePressure Unit="grams">30</KnifePressure>
+			<ZDistanceUp Unit="mm">3</ZDistanceUp>
+			<ZDistanceDown Unit="mm">0</ZDistanceDown>
+			<SpeedMovingDown Unit="mm/s">10</SpeedMovingDown>
+			<SpeedMovingUp Unit="mm/s">300</SpeedMovingUp>
+			<BitName></BitName>
+			<Passes>1</Passes>
+			<Angle Unit="degrees">40</Angle>
+			<KnifeCompensation>False</KnifeCompensation>
+			<ZCCLayerInfo>
+				<BasedOn></BasedOn>
+				<ZCCCuttingMode>1</ZCCCuttingMode>
+				<ZCCRegistrationMethod>1</ZCCRegistrationMethod>
+				<Colour>
+					<OverrideLayerColour>False</OverrideLayerColour>
+					<LayerColourToUse>-1</LayerColourToUse>
+					<DefaultLayerColour>-1</DefaultLayerColour>
+				</Colour>
+			</ZCCLayerInfo>
+			<ToolOffsetCorrection>
+				<X Unit="mm">0</X>
+			</ToolOffsetCorrection>
+			<WaitingTime>
+				<PDB Unit="ms">0</PDB>
+				<PDA Unit="ms">0</PDA>
+				<PUB Unit="ms">0</PUB>
+				<PUA Unit="ms">0</PUA>
+			</WaitingTime>
+			<Quality>
+				<PN>2</PN>
+				<G3>1</G3>
+			</Quality>
+			<Camera>
+				<CameraLight>0</CameraLight>
+				<CameraCompensationType>2</CameraCompensationType>
+				<MediaIsPossibleToBeCutFromBackSide>False</MediaIsPossibleToBeCutFromBackSide>
+				<ColorTemperature>1</ColorTemperature>
+				<EdgeSensing>
+					<DistanceFromEdge Unit="micron">50000</DistanceFromEdge>
+					<DistanceBetweenTest Unit="micron">100000</DistanceBetweenTest>
+					<SubStepMaxDistance Unit="micron">30000</SubStepMaxDistance>
+					<SubStepSize Unit="micron">10000</SubStepSize>
+					<MaxSuccesFullReadsOnOneEdge>3</MaxSuccesFullReadsOnOneEdge>
+					<FirstDistanceXWithRegMarks Unit="micron">20000</FirstDistanceXWithRegMarks>
+					<FirstDistanceYWithRegMarks Unit="micron">20000</FirstDistanceYWithRegMarks>
+				</EdgeSensing>
+				<BackSideWithRegs>
+					<Mode>0</Mode>
+					<Corner>1</Corner>
+					<OnlyReadRegmarksOnFirstSheet>False</OnlyReadRegmarksOnFirstSheet>
+					<FlipDirectionHorizontal>True</FlipDirectionHorizontal>
+				</BackSideWithRegs>
+			</Camera>
+			<Overcut>
+				<Enabled>False</Enabled>
+				<StartInInnerCorner Unit="micron">1000</StartInInnerCorner>
+				<EndInInnerCorner Unit="micron">1000</EndInInnerCorner>
+				<StartInOuterCorner Unit="micron">1000</StartInOuterCorner>
+				<EndInOuterCorner Unit="micron">1000</EndInOuterCorner>
+				<SmoothOvercut Unit="micron">1000</SmoothOvercut>
+			</Overcut>
+			<Thin>
+				<MaxTolerance>2</MaxTolerance>
+				<MaxDegree>4</MaxDegree>
+			</Thin>
+		</Layer0>
+		<Layer1>
+			<Name>CutContour</Name>
+			<LayerColour>-1</LayerColour>
+			<PenType>4</PenType>
+			<BeforeLayer></BeforeLayer>
+			<BeforeLayerAfterUI></BeforeLayerAfterUI>
+			<AfterLayer></AfterLayer>
+			<PenSelect>1</PenSelect>
+			<SpeedDown Unit="mm/s">1000</SpeedDown>
+			<SpeedUp Unit="mm/s">1000</SpeedUp>
+			<AccelerationDown>4</AccelerationDown>
+			<AccelerationUp>4</AccelerationUp>
+			<KnifePressure Unit="grams">30</KnifePressure>
+			<ZDistanceUp Unit="mm">5</ZDistanceUp>
+			<ZDistanceDown Unit="mm">0</ZDistanceDown>
+			<SpeedMovingDown Unit="mm/s">300</SpeedMovingDown>
+			<SpeedMovingUp Unit="mm/s">300</SpeedMovingUp>
+			<BitName>Z50</BitName>
+			<Passes>1</Passes>
+			<Angle Unit="degrees">40</Angle>
+			<Frequency Unit="rot/s">0</Frequency>
+			<KnifeCompensation>False</KnifeCompensation>
+			<ZCCLayerInfo>
+				<BasedOn></BasedOn>
+				<ZCCCuttingMode>1</ZCCCuttingMode>
+				<ZCCRegistrationMethod>1</ZCCRegistrationMethod>
+				<Colour>
+					<OverrideLayerColour>False</OverrideLayerColour>
+					<LayerColourToUse>-1</LayerColourToUse>
+					<DefaultLayerColour>-1</DefaultLayerColour>
+				</Colour>
+			</ZCCLayerInfo>
+			<ToolOffsetCorrection>
+				<X Unit="mm">0</X>
+			</ToolOffsetCorrection>
+			<WaitingTime>
+				<PDB Unit="ms">0</PDB>
+				<PDA Unit="ms">10</PDA>
+				<PUB Unit="ms">10</PUB>
+				<PUA Unit="ms">0</PUA>
+			</WaitingTime>
+			<Quality>
+				<PN>2</PN>
+				<G3>2</G3>
+			</Quality>
+			<DRT>
+				<CompensationDistance Unit="micron">3000</CompensationDistance>
+				<RotationSpeedFast>True</RotationSpeedFast>
+			</DRT>
+			<Overcut>
+				<Enabled>False</Enabled>
+				<StartInInnerCorner Unit="micron">1000</StartInInnerCorner>
+				<EndInInnerCorner Unit="micron">1000</EndInInnerCorner>
+				<StartInOuterCorner Unit="micron">1000</StartInOuterCorner>
+				<EndInOuterCorner Unit="micron">1000</EndInOuterCorner>
+				<SmoothOvercut Unit="micron">1000</SmoothOvercut>
+			</Overcut>
+			<Thin>
+				<MaxTolerance>2</MaxTolerance>
+				<MaxDegree>4</MaxDegree>
+			</Thin>
+		</Layer1>
+		<Layer2>
+			<Name>CreaseContour</Name>
+			<LayerColour>-1</LayerColour>
+			<PenType>4</PenType>
+			<BeforeLayer></BeforeLayer>
+			<BeforeLayerAfterUI></BeforeLayerAfterUI>
+			<AfterLayer></AfterLayer>
+			<PenSelect>1</PenSelect>
+			<SpeedDown Unit="mm/s">1000</SpeedDown>
+			<SpeedUp Unit="mm/s">1000</SpeedUp>
+			<AccelerationDown>4</AccelerationDown>
+			<AccelerationUp>4</AccelerationUp>
+			<KnifePressure Unit="grams">30</KnifePressure>
+			<ZDistanceUp Unit="mm">5</ZDistanceUp>
+			<ZDistanceDown Unit="mm">0</ZDistanceDown>
+			<SpeedMovingDown Unit="mm/s">300</SpeedMovingDown>
+			<SpeedMovingUp Unit="mm/s">300</SpeedMovingUp>
+			<BitName>Z50</BitName>
+			<Passes>1</Passes>
+			<Angle Unit="degrees">40</Angle>
+			<Frequency Unit="rot/s">0</Frequency>
+			<KnifeCompensation>False</KnifeCompensation>
+			<ZCCLayerInfo>
+				<BasedOn></BasedOn>
+				<ZCCCuttingMode>1</ZCCCuttingMode>
+				<ZCCRegistrationMethod>1</ZCCRegistrationMethod>
+				<Colour>
+					<OverrideLayerColour>False</OverrideLayerColour>
+					<LayerColourToUse>-1</LayerColourToUse>
+					<DefaultLayerColour>-1</DefaultLayerColour>
+				</Colour>
+			</ZCCLayerInfo>
+			<ToolOffsetCorrection>
+				<X Unit="mm">0</X>
+			</ToolOffsetCorrection>
+			<WaitingTime>
+				<PDB Unit="ms">0</PDB>
+				<PDA Unit="ms">10</PDA>
+				<PUB Unit="ms">10</PUB>
+				<PUA Unit="ms">0</PUA>
+			</WaitingTime>
+			<Quality>
+				<PN>2</PN>
+				<G3>2</G3>
+			</Quality>
+			<DRT>
+				<CompensationDistance Unit="micron">3000</CompensationDistance>
+				<RotationSpeedFast>True</RotationSpeedFast>
+			</DRT>
+			<Overcut>
+				<Enabled>False</Enabled>
+				<StartInInnerCorner Unit="micron">1000</StartInInnerCorner>
+				<EndInInnerCorner Unit="micron">1000</EndInInnerCorner>
+				<StartInOuterCorner Unit="micron">1000</StartInOuterCorner>
+				<EndInOuterCorner Unit="micron">1000</EndInOuterCorner>
+				<SmoothOvercut Unit="micron">1000</SmoothOvercut>
+			</Overcut>
+			<Thin>
+				<MaxTolerance>2</MaxTolerance>
+				<MaxDegree>4</MaxDegree>
+			</Thin>
+		</Layer2>
+		<Layer3>
+			<Name>KissContour</Name>
+			<LayerColour>-1</LayerColour>
+			<PenType>-1</PenType>
+			<BeforeLayer></BeforeLayer>
+			<BeforeLayerAfterUI></BeforeLayerAfterUI>
+			<AfterLayer></AfterLayer>
+			<PenSelect>1</PenSelect>
+			<SpeedDown Unit="mm/s">100</SpeedDown>
+			<SpeedUp Unit="mm/s">1000</SpeedUp>
+			<AccelerationDown>2</AccelerationDown>
+			<AccelerationUp>4</AccelerationUp>
+			<KnifePressure Unit="grams">30</KnifePressure>
+			<ZDistanceUp Unit="mm">3</ZDistanceUp>
+			<ZDistanceDown Unit="mm">0</ZDistanceDown>
+			<SpeedMovingDown Unit="mm/s">10</SpeedMovingDown>
+			<SpeedMovingUp Unit="mm/s">300</SpeedMovingUp>
+			<BitName></BitName>
+			<Passes>1</Passes>
+			<Angle Unit="degrees">40</Angle>
+			<KnifeCompensation>False</KnifeCompensation>
+			<ZCCLayerInfo>
+				<BasedOn></BasedOn>
+				<ZCCCuttingMode>1</ZCCCuttingMode>
+				<ZCCRegistrationMethod>1</ZCCRegistrationMethod>
+				<Colour>
+					<OverrideLayerColour>False</OverrideLayerColour>
+					<LayerColourToUse>-1</LayerColourToUse>
+					<DefaultLayerColour>-1</DefaultLayerColour>
+				</Colour>
+			</ZCCLayerInfo>
+			<ToolOffsetCorrection>
+				<X Unit="mm">0</X>
+			</ToolOffsetCorrection>
+			<WaitingTime>
+				<PDB Unit="ms">0</PDB>
+				<PDA Unit="ms">10</PDA>
+				<PUB Unit="ms">10</PUB>
+				<PUA Unit="ms">0</PUA>
+			</WaitingTime>
+			<Quality>
+				<PN>2</PN>
+				<G3>1</G3>
+			</Quality>
+			<Overcut>
+				<Enabled>False</Enabled>
+				<StartInInnerCorner Unit="micron">1000</StartInInnerCorner>
+				<EndInInnerCorner Unit="micron">1000</EndInInnerCorner>
+				<StartInOuterCorner Unit="micron">1000</StartInOuterCorner>
+				<EndInOuterCorner Unit="micron">1000</EndInOuterCorner>
+				<SmoothOvercut Unit="micron">1000</SmoothOvercut>
+			</Overcut>
+			<Thin>
+				<MaxTolerance>2</MaxTolerance>
+				<MaxDegree>4</MaxDegree>
+			</Thin>
+		</Layer3>
+		<Layer4>
+			<Name>Etch</Name>
+			<LayerColour>-1</LayerColour>
+			<PenType>-1</PenType>
+			<BeforeLayer></BeforeLayer>
+			<BeforeLayerAfterUI></BeforeLayerAfterUI>
+			<AfterLayer></AfterLayer>
+			<PenSelect>1</PenSelect>
+			<SpeedDown Unit="mm/s">100</SpeedDown>
+			<SpeedUp Unit="mm/s">1000</SpeedUp>
+			<AccelerationDown>2</AccelerationDown>
+			<AccelerationUp>4</AccelerationUp>
+			<KnifePressure Unit="grams">30</KnifePressure>
+			<ZDistanceUp Unit="mm">3</ZDistanceUp>
+			<ZDistanceDown Unit="mm">0</ZDistanceDown>
+			<SpeedMovingDown Unit="mm/s">10</SpeedMovingDown>
+			<SpeedMovingUp Unit="mm/s">300</SpeedMovingUp>
+			<BitName></BitName>
+			<Passes>1</Passes>
+			<Angle Unit="degrees">40</Angle>
+			<KnifeCompensation>False</KnifeCompensation>
+			<ZCCLayerInfo>
+				<BasedOn></BasedOn>
+				<ZCCCuttingMode>1</ZCCCuttingMode>
+				<ZCCRegistrationMethod>1</ZCCRegistrationMethod>
+				<Colour>
+					<OverrideLayerColour>False</OverrideLayerColour>
+					<LayerColourToUse>-1</LayerColourToUse>
+					<DefaultLayerColour>-1</DefaultLayerColour>
+				</Colour>
+			</ZCCLayerInfo>
+			<ToolOffsetCorrection>
+				<X Unit="mm">0</X>
+			</ToolOffsetCorrection>
+			<WaitingTime>
+				<PDB Unit="ms">0</PDB>
+				<PDA Unit="ms">10</PDA>
+				<PUB Unit="ms">10</PUB>
+				<PUA Unit="ms">0</PUA>
+			</WaitingTime>
+			<Quality>
+				<PN>2</PN>
+				<G3>1</G3>
+			</Quality>
+			<Overcut>
+				<Enabled>False</Enabled>
+				<StartInInnerCorner Unit="micron">1000</StartInInnerCorner>
+				<EndInInnerCorner Unit="micron">1000</EndInInnerCorner>
+				<StartInOuterCorner Unit="micron">1000</StartInOuterCorner>
+				<EndInOuterCorner Unit="micron">1000</EndInOuterCorner>
+				<SmoothOvercut Unit="micron">1000</SmoothOvercut>
+			</Overcut>
+			<Thin>
+				<MaxTolerance>2</MaxTolerance>
+				<MaxDegree>4</MaxDegree>
+			</Thin>
+		</Layer4>
+	</Layers>
+	<RegisterMarks>
+		<Radius Unit="micron">3500</Radius>
+		<Distance2Curve Unit="micron">8000</Distance2Curve>
+		<DistanceBetween Unit="micron">500000</DistanceBetween>
+		<CenterMarkDistanceWhenAlsoShapeMarks Unit="micron">700000</CenterMarkDistanceWhenAlsoShapeMarks>
+		<ToggleDistanceBetweenCenterAndCornerMarks Unit="micron">1000000</ToggleDistanceBetweenCenterAndCornerMarks>
+		<ShapeMarksMargin Unit="micron">50000</ShapeMarksMargin>
+		<Type>0</Type>
+		<AutoModeNonNesting>0</AutoModeNonNesting>
+		<AutoModeNesting>0</AutoModeNesting>
+		<White>
+			<SpotColourName></SpotColourName>
+			<C Unit="%">0</C>
+			<M Unit="%">0</M>
+			<Y Unit="%">0</Y>
+			<K Unit="%">0</K>
+		</White>
+		<Black>
+			<SpotColourName></SpotColourName>
+			<C Unit="%">0</C>
+			<M Unit="%">0</M>
+			<Y Unit="%">0</Y>
+			<K Unit="%">100</K>
+		</Black>
+	</RegisterMarks>
+	<Barcode>
+		<Width Unit="micron">25000</Width>
+		<Height Unit="micron">25000</Height>
+		<Reduction Unit="micron">0</Reduction>
+		<DistanceFromEdge Unit="micron">1000</DistanceFromEdge>
+		<UseCode39>True</UseCode39>
+		<ReadInYDir>True</ReadInYDir>
+		<BarcodeType>4</BarcodeType>
+		<Direct>
+			<Top>False</Top>
+			<Bottom>False</Bottom>
+			<Left>False</Left>
+			<Right>False</Right>
+			<AutoPosition>False</AutoPosition>
+		</Direct>
+		<Nesting>
+			<Top>False</Top>
+			<Bottom>False</Bottom>
+			<Left>False</Left>
+			<Right>False</Right>
+			<AutoPosition>False</AutoPosition>
+		</Nesting>
+		<ForeGroundColour>
+			<SpotColourName></SpotColourName>
+			<C Unit="%">0</C>
+			<M Unit="%">0</M>
+			<Y Unit="%">0</Y>
+			<K Unit="%">100</K>
+		</ForeGroundColour>
+		<BackGroundColour>
+			<Oversize Unit="micron">3000</Oversize>
+			<SpotColourName></SpotColourName>
+			<C Unit="%">0</C>
+			<M Unit="%">0</M>
+			<Y Unit="%">0</Y>
+			<K Unit="%">100</K>
+		</BackGroundColour>
+		<OverheadInfo>
+			<OverrideBarcodePosition>False</OverrideBarcodePosition>
+			<BottomBarcodeIsPositionedRelativeToRightEdge>True</BottomBarcodeIsPositionedRelativeToRightEdge>
+			<OffsetFromOutsideOfCornerMarkToBarcodeStart Unit="micron">300000</OffsetFromOutsideOfCornerMarkToBarcodeStart>
+		</OverheadInfo>
+	</Barcode>
+	<Nesting>
+		<MinimumOversizeForClippingPath Unit="micron">500</MinimumOversizeForClippingPath>
+		<DistanceBetweenJobs Unit="micron">9500</DistanceBetweenJobs>
+		<MarginSize Unit="micron">0</MarginSize>
+		<KeepProducedSigns>False</KeepProducedSigns>
+		<MaxNestingTimeInSecs Unit="s">30</MaxNestingTimeInSecs>
+		<ForcedAngles>
+			<Rotation0>True</Rotation0>
+			<Rotation45>False</Rotation45>
+			<Rotation90>True</Rotation90>
+			<Rotation135>False</Rotation135>
+			<Rotation180>True</Rotation180>
+			<Rotation225>False</Rotation225>
+			<Rotation270>True</Rotation270>
+			<Rotation315>False</Rotation315>
+			<AutoOptimizeAngles>False</AutoOptimizeAngles>
+		</ForcedAngles>
+		<UnUsedSpace>
+			<TrimUnUsedAreaOfSheet>False</TrimUnUsedAreaOfSheet>
+			<FillUnUsedAreaOfSheet>False</FillUnUsedAreaOfSheet>
+		</UnUsedSpace>
+		<Rectangles>
+			<AngleStep Unit="degrees">90</AngleStep>
+		</Rectangles>
+		<OtherFigures>
+			<AngleStep Unit="degrees">1</AngleStep>
+		</OtherFigures>
+		<GroupBy>
+			<UserOverride>
+				<Method>0</Method>
+				<DistanceBetweenGroups Unit="Micron">20000</DistanceBetweenGroups>
+				<ShowGroupLines>True</ShowGroupLines>
+			</UserOverride>
+			<MediaOnlyValues>
+				<LineThickness Unit="Micron">1000</LineThickness>
+				<LineColour>
+					<SpotColourName></SpotColourName>
+					<C Unit="%">0</C>
+					<M Unit="%">0</M>
+					<Y Unit="%">0</Y>
+					<K Unit="%">100</K>
+				</LineColour>
+			</MediaOnlyValues>
+		</GroupBy>
+	</Nesting>
+	<Camera>
+		<MinAutoThreshold>64</MinAutoThreshold>
+		<MaxAutoThreshold>248</MaxAutoThreshold>
+		<AutoStep>32</AutoStep>
+		<CameraChannel>0</CameraChannel>
+		<AverageFramesG3>1</AverageFramesG3>
+		<AverageFramesPN>1</AverageFramesPN>
+		<DefaultToPositiveMarks>True</DefaultToPositiveMarks>
+		<PNSettings>
+			<UseValuesFromSetupXML>True</UseValuesFromSetupXML>
+		</PNSettings>
+		<G3Settings>
+			<UseValuesFromSetupXML>True</UseValuesFromSetupXML>
+		</G3Settings>
+		<OtherCameraSettings>
+			<UseValuesFromSetupXML>True</UseValuesFromSetupXML>
+		</OtherCameraSettings>
+		<EdgeDetection>
+			<Edges>
+				<NoiceReduction>True</NoiceReduction>
+				<Canny>
+					<Th>200</Th>
+					<Tl>10</Tl>
+					<GaussianMaskSize>5</GaussianMaskSize>
+					<SigmaforGaussianKernel>1</SigmaforGaussianKernel>
+				</Canny>
+				<LineDetection>
+					<rho>1</rho>
+					<theta>0.001</theta>
+					<threshold>50</threshold>
+					<minLineLength>100</minLineLength>
+					<maxGap>16</maxGap>
+					<AngleTolerance>5</AngleTolerance>
+					<Reduction>4</Reduction>
+				</LineDetection>
+				<Average>
+					<RunningAverage>False</RunningAverage>
+					<AverageFrames>10</AverageFrames>
+					<MinimumFrames>1</MinimumFrames>
+				</Average>
+				<AutoThreshold>
+					<Active>False</Active>
+					<Max>100</Max>
+					<Min>30</Min>
+					<Start>50</Start>
+					<Step>10</Step>
+				</AutoThreshold>
+				<InputThreshold>
+					<Active>True</Active>
+					<Auto>False</Auto>
+					<Max>200</Max>
+					<Min>40</Min>
+					<Start>128</Start>
+					<Step>32</Step>
+					<FixedValue>128</FixedValue>
+				</InputThreshold>
+			</Edges>
+			<Squares>
+				<NoiceReduction>True</NoiceReduction>
+				<Canny>
+					<Th>160</Th>
+					<Tl>10</Tl>
+					<GaussianMaskSize>5</GaussianMaskSize>
+					<SigmaforGaussianKernel>1</SigmaforGaussianKernel>
+				</Canny>
+				<LineDetection>
+					<rho>1</rho>
+					<theta>0.001</theta>
+					<threshold>20</threshold>
+					<minLineLength>20</minLineLength>
+					<maxGap>50</maxGap>
+					<AngleTolerance>5</AngleTolerance>
+					<Reduction>1</Reduction>
+				</LineDetection>
+				<Average>
+					<RunningAverage>False</RunningAverage>
+					<AverageFrames>10</AverageFrames>
+					<MinimumFrames>1</MinimumFrames>
+				</Average>
+				<AutoThreshold>
+					<Active>False</Active>
+					<Max>100</Max>
+					<Min>30</Min>
+					<Start>50</Start>
+					<Step>10</Step>
+				</AutoThreshold>
+				<InputThreshold>
+					<Active>True</Active>
+					<Auto>True</Auto>
+					<Max>170</Max>
+					<Min>96</Min>
+					<Start>128</Start>
+					<Step>8</Step>
+					<FixedValue>128</FixedValue>
+				</InputThreshold>
+			</Squares>
+		</EdgeDetection>
+	</Camera>
+	<Eyelets>
+		<Top>False</Top>
+		<Bottom>False</Bottom>
+		<Left>False</Left>
+		<Right>False</Right>
+		<Distance2EdgeLeftRight Unit="Micron">20000</Distance2EdgeLeftRight>
+		<Distance2EdgeTopBottom Unit="Micron">20000</Distance2EdgeTopBottom>
+		<MaxDistanceBetweenEyeletsHorizontal Unit="Micron">300000</MaxDistanceBetweenEyeletsHorizontal>
+		<MaxDistanceBetweenEyeletsVertical Unit="Micron">300000</MaxDistanceBetweenEyeletsVertical>
+		<EyeletDimensions>
+			<Type>0</Type>
+			<Diameter Unit="Micron">10000</Diameter>
+			<CutLayerName>CutContour</CutLayerName>
+			<StrokeWidth Unit="Micron">1000</StrokeWidth>
+			<StrokeColour>
+				<SpotColourName></SpotColourName>
+				<C Unit="%">0</C>
+				<M Unit="%">0</M>
+				<Y Unit="%">0</Y>
+				<K Unit="%">100</K>
+			</StrokeColour>
+			<EyeletColour>
+				<SpotColourName></SpotColourName>
+				<C Unit="%">0</C>
+				<M Unit="%">0</M>
+				<Y Unit="%">0</Y>
+				<K Unit="%">0</K>
+			</EyeletColour>
+		</EyeletDimensions>
+	</Eyelets>
+	<Comments>
+		<PrepareItComment></PrepareItComment>
+		<CutItComment></CutItComment>
+		<MediaManagerComment></MediaManagerComment>
+	</Comments>
+	<Feeding>
+		<PositionHeadBeforeFeed>False</PositionHeadBeforeFeed>
+		<PositionHeadLeft>True</PositionHeadLeft>
+		<FeedingMode>2</FeedingMode>
+		<FeedingSpeed>-1</FeedingSpeed>
+		<MaxFeedingLength Unit="micron">10000000</MaxFeedingLength>
+	</Feeding>
+	<NonCameraWithCutOffSettings>
+		<SmartFeed>True</SmartFeed>
+		<MarginTopBottom>6000</MarginTopBottom>
+		<MarginRight>6000</MarginRight>
+	</NonCameraWithCutOffSettings>
+	<MoveIt>
+		<TurnOnTableVacuumWhenHeadIsUp>False</TurnOnTableVacuumWhenHeadIsUp>
+		<Slow>
+			<InitialDistance Unit="micron">5000</InitialDistance>
+			<SmallStepDelay Unit="ms">100</SmallStepDelay>
+			<SmallStepDistance Unit="micron">4000</SmallStepDistance>
+			<TotalDistance Unit="micron">30000</TotalDistance>
+		</Slow>
+		<Normal>
+			<InitialDistance Unit="micron">5000</InitialDistance>
+			<SmallStepDelay Unit="ms">100</SmallStepDelay>
+			<SmallStepDistance Unit="micron">4000</SmallStepDistance>
+			<TotalDistance Unit="micron">22500</TotalDistance>
+		</Normal>
+		<Fast>
+			<InitialDistance Unit="micron">5000</InitialDistance>
+			<SmallStepDelay Unit="ms">100</SmallStepDelay>
+			<SmallStepDistance Unit="micron">4000</SmallStepDistance>
+			<TotalDistance Unit="micron">15000</TotalDistance>
+		</Fast>
+	</MoveIt>
+	<ZCC>
+		<Name></Name>
+		<Type></Type>
+		<Description></Description>
+		<GUID></GUID>
+		<Thickness></Thickness>
+		<Comment></Comment>
+		<NameSuffix></NameSuffix>
+	</ZCC>
+	<SheetInfos>
+		<Cnt>1</Cnt>
+		<Sheet0>
+			<Name>1350 x 3100</Name>
+			<Width Unit="Micron">1350000</Width>
+			<Length Unit="Micron">3100000</Length>
+			<Default>True</Default>
+			<CanBeUsedAsLastSheet>False</CanBeUsedAsLastSheet>
+			<CanBeUsedAsTemplateForScrapMaterial>False</CanBeUsedAsTemplateForScrapMaterial>
+			<Disable>False</Disable>
+			<NestingFixedSize>False</NestingFixedSize>
+		</Sheet0>
+	</SheetInfos>
+	<Vacuum>
+		<G3VacuumLevel>5</G3VacuumLevel>
+		<EndVacuumType>0</EndVacuumType>
+		<G3AutoAdjustVacuumIn>True</G3AutoAdjustVacuumIn>
+	</Vacuum>
+</ROLLWHITETEMPLATE>

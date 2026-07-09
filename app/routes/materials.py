@@ -1,17 +1,20 @@
 """Administrator-facing material list and edit routes."""
 
+from io import BytesIO
 import json
 from typing import Annotated, Any
+from zipfile import ZIP_DEFLATED, ZipFile
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request
-from fastapi.responses import RedirectResponse, Response
+from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..main_paths import TEMPLATES_DIR
+from ..main_paths import PREPIT_TEMPLATE_RULES_PATH, PREPIT_TEMPLATES_DIR, TEMPLATES_DIR
 from ..models import Material
+from ..prepit_export import PrepitExportError, build_prepit_xml
 
 router = APIRouter(tags=["admin"])
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -131,6 +134,46 @@ def materials_page(request: Request, q: str = "", kind: str = "all", status: str
         statement = statement.where(Material.active.is_(False))
     rows = db.scalars(statement.order_by(Material.sort_order, Material.friendly_name, Material.name)).all()
     return templates.TemplateResponse(request, "materials.html", {"materials": rows, "q": q, "kind": kind, "status": status})
+
+
+@router.get("/materials/download/prepit")
+def download_prepit_zip(db: Session = Depends(get_db)):
+    rows = db.scalars(
+        select(Material)
+        .where(Material.prepit.is_not(None))
+        .order_by(Material.sort_order, Material.friendly_name, Material.name, Material.id)
+    ).all()
+    if not rows:
+        return RedirectResponse("/materials?error=No%20Prepit%20materials%20are%20checked", status_code=303)
+
+    archive = BytesIO()
+    used_filenames: set[str] = set()
+    try:
+        with ZipFile(archive, "w", ZIP_DEFLATED) as zip_file:
+            for material in rows:
+                generated = build_prepit_xml(material, PREPIT_TEMPLATES_DIR, PREPIT_TEMPLATE_RULES_PATH)
+                filename = _unique_zip_filename(generated.filename, used_filenames)
+                zip_file.writestr(filename, generated.content)
+    except PrepitExportError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    archive.seek(0)
+    headers = {"Content-Disposition": 'attachment; filename="prepit_xml.zip"'}
+    return StreamingResponse(archive, media_type="application/zip", headers=headers)
+
+
+def _unique_zip_filename(filename: str, used_filenames: set[str]) -> str:
+    if filename not in used_filenames:
+        used_filenames.add(filename)
+        return filename
+    stem, suffix = filename.rsplit(".", 1)
+    counter = 2
+    while True:
+        candidate = f"{stem}_{counter}.{suffix}"
+        if candidate not in used_filenames:
+            used_filenames.add(candidate)
+            return candidate
+        counter += 1
 
 
 @router.get("/materials/{material_id}/edit")

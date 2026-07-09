@@ -37,6 +37,10 @@ python -m app.backfill
 
 SQLite creates `materials.db` on first application startup rather than storing a binary database in source control.
 
+## Prepit Export
+
+The Materials page **Download** button creates `prepit_xml.zip` from every row with Prepit checked. XML templates live in `Resources/Prepit_templates`; Matex-to-registration colour rules are edited in `Resources/prepit_template_rules.json`.
+
 ## API
 
 - `GET /api/materials` — active materials, ordered by sort order, friendly name, then name
