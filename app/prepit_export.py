@@ -44,6 +44,11 @@ def build_prepit_xml(material: Material, templates_dir: Path, rules_path: Path) 
     return PrepitXml(filename=f"{_safe_filename(media_name)}.Media.xml", content=_xml_bytes(tree))
 
 
+def prepit_media_name(material: Material) -> str:
+    """Return the shared media name used by XML files and text lists."""
+    return _media_name(material)
+
+
 def _template_filename(material: Material, rules_path: Path) -> str:
     registration = _registration_colour(material.matex, rules_path)
     material_kind = "roll" if _is_roll(material) else "sheet"

@@ -16,9 +16,10 @@ from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import Session
 
 from ..database import get_db
+from ..google_sheets import GoogleSheetsSyncError, sync_materials_to_google_sheet
 from ..main_paths import PREPIT_TEMPLATE_RULES_PATH, PREPIT_TEMPLATES_DIR, ROOT_DIR, TEMPLATES_DIR
 from ..models import Material
-from ..prepit_export import PrepitExportError, build_prepit_xml
+from ..prepit_export import PrepitExportError, build_prepit_xml, prepit_media_name
 
 router = APIRouter(tags=["admin"])
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -213,6 +214,17 @@ def export_material_files(db: Session = Depends(get_db)):
     return RedirectResponse(f"/materials?{query}", status_code=303)
 
 
+@router.post("/materials/google-sync")
+def google_sync_materials(db: Session = Depends(get_db)):
+    try:
+        synced_count = sync_materials_to_google_sheet(db)
+    except GoogleSheetsSyncError as exc:
+        query = urlencode({"error": str(exc)})
+    else:
+        query = urlencode({"notice": f"Google Sync updated {synced_count} materials"})
+    return RedirectResponse(f"/materials?{query}", status_code=303)
+
+
 def _prepit_rows(db: Session) -> list[Material]:
     return list(db.scalars(
         select(Material)
@@ -256,18 +268,7 @@ def _prepit_name_list(rows: list[Material], roll: bool) -> str:
 
 
 def _prepit_list_name(material: Material) -> str:
-    sku = (material.sku or "").strip()
-    name = ((material.friendly_name or material.name) or "").strip()
-    if _is_roll_material(material):
-        width = _format_csv_number(material.width_mm)
-        size = f"{width}mm" if width else ""
-        return "_".join(part for part in [sku, name, size] if part)
-
-    thickness = _format_csv_number(material.thickness_mm)
-    width = _format_csv_number(material.width_mm)
-    height = _format_csv_number(material.height_mm)
-    size = f"{width}x{height}mm" if width or height else ""
-    return "_".join(part for part in [sku, name, thickness, size] if part)
+    return prepit_media_name(material)
 
 
 def _export_path() -> Path:

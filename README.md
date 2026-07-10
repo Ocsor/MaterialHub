@@ -41,6 +41,21 @@ SQLite creates `materials.db` on first application startup rather than storing a
 
 The Materials page **Export** button writes files to `MATERIALHUB_EXPORT_PATH` from `.env`, overwriting any existing files with the same names. It creates `prepit_xml.zip`, `imp_materials.csv`, `prepit_rolls.txt`, and `prepit_sheets.txt`. XML templates live in `Resources/Prepit_templates`; Matex-to-registration colour rules are edited in `Resources/prepit_template_rules.json`.
 
+The **Google Sync** button writes active materials to a Google Sheet with the
+columns `SKU`, `Friendly Name`, `Width`, `Height`, and `Thick`. Create a Google
+Cloud service account, share the target spreadsheet with the service account
+email, then set these values in `.env`:
+
+```powershell
+GOOGLE_SHEETS_SPREADSHEET_ID=your-spreadsheet-id
+GOOGLE_SHEETS_SHEET_NAME=Materials
+GOOGLE_SERVICE_ACCOUNT_FILE=path\to\service-account.json
+```
+
+`GOOGLE_SERVICE_ACCOUNT_JSON` can be used instead of
+`GOOGLE_SERVICE_ACCOUNT_FILE` when storing the credential JSON directly in the
+environment.
+
 ## API
 
 - `GET /api/materials` — active materials, ordered by sort order, friendly name, then name
