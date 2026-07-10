@@ -35,8 +35,19 @@
     {% for m in materials %}
       {% set edit_url = '/materials/' ~ m.id ~ '/edit' %}
       {% set display_name = m.friendly_name or m.name %}
+      {% set copy_name = prepit_copy_name(m) %}
       <tr>
-        <td class="strong"><a class="cell-link" href="{{ edit_url }}"><span class="sku-pill">{{ m.sku or '—' }}</span></a></td>
+        <td class="strong sku-cell">
+          {% if copy_name %}
+            <button class="copy-name-button" type="button" data-copy-text="{{ copy_name }}" aria-label="Copy {{ copy_name }}" title="Copy Prepit name">
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+            </button>
+          {% endif %}
+          <a class="cell-link sku-link" href="{{ edit_url }}"><span class="sku-pill">{{ m.sku or '—' }}</span></a>
+        </td>
         <td class="strong material-name-cell"><a class="cell-link" href="{{ edit_url }}"><span class="material-name-line"><span>{{ display_name }}</span>{% if m.thickness_mm is not none %}<span class="thickness-pill">{{ m.thickness_mm|int if m.thickness_mm == m.thickness_mm|int else m.thickness_mm }} mm</span>{% endif %}</span><span class="material-size">{% if m.width_mm is not none %}{{ m.width_mm|int if m.width_mm == m.width_mm|int else m.width_mm }}{% if m.height_mm is not none %} × {{ m.height_mm|int if m.height_mm == m.height_mm|int else m.height_mm }}{% elif m.length_mm is not none %} × {{ m.length_mm|int if m.length_mm == m.length_mm|int else m.length_mm }}{% endif %} {{ m.size_unit or 'mm' }}{% elif m.size_string and m.size_string != 'Unit' %}{{ m.size_string }}{% else %}Size unavailable{% endif %}</span></a></td>
         <td>
           <form id="inline-{{ m.id }}" action="/materials/{{ m.id }}/inline" method="post"></form>

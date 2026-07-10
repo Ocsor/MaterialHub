@@ -155,7 +155,13 @@ def materials_page(request: Request, q: str = "", kind: str = "all", status: str
     elif status == "inactive":
         statement = statement.where(Material.active.is_(False))
     rows = db.scalars(statement.order_by(Material.sort_order, Material.friendly_name, Material.name)).all()
-    return templates.TemplateResponse(request, "materials.html", {"materials": rows, "q": q, "kind": kind, "status": status})
+    return templates.TemplateResponse(request, "materials.html", {
+        "materials": rows,
+        "q": q,
+        "kind": kind,
+        "status": status,
+        "prepit_copy_name": _prepit_copy_name,
+    })
 
 
 @router.get("/materials/download/prepit")
@@ -269,6 +275,13 @@ def _prepit_name_list(rows: list[Material], roll: bool) -> str:
 
 def _prepit_list_name(material: Material) -> str:
     return prepit_media_name(material)
+
+
+def _prepit_copy_name(material: Material) -> str:
+    try:
+        return prepit_media_name(material)
+    except PrepitExportError:
+        return ""
 
 
 def _export_path() -> Path:

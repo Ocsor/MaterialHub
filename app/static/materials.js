@@ -52,6 +52,26 @@ document.addEventListener("DOMContentLoaded", () => {
     select.addEventListener("change", refreshTable);
   });
 
+  async function copyToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.top = "-1000px";
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      if (!document.execCommand("copy")) throw new Error("Copy command was rejected");
+    } finally {
+      textarea.remove();
+    }
+  }
+
   document.addEventListener("change", async (event) => {
     const control = event.target;
     if (!(control instanceof HTMLInputElement) || !control.classList.contains("inline-save")) return;
@@ -80,6 +100,28 @@ document.addEventListener("DOMContentLoaded", () => {
       linkedControls.forEach((item) => {
         if (item instanceof HTMLInputElement) item.disabled = false;
       });
+    }
+  });
+
+  document.addEventListener("click", async (event) => {
+    const button = event.target.closest(".copy-name-button");
+    if (!(button instanceof HTMLButtonElement)) return;
+
+    const text = button.dataset.copyText || "";
+    if (!text) return;
+
+    try {
+      await copyToClipboard(text);
+      button.classList.add("copied");
+      button.setAttribute("aria-label", `Copied ${text}`);
+      setTimeout(() => {
+        button.classList.remove("copied");
+        button.setAttribute("aria-label", `Copy ${text}`);
+      }, 1200);
+    } catch (error) {
+      console.error(error);
+      button.classList.add("copy-failed");
+      setTimeout(() => button.classList.remove("copy-failed"), 1200);
     }
   });
 });
