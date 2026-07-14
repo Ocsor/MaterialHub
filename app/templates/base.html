@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="{{ url_for('static', path='/inline-edit.css') }}">
 </head>
 <body>
-  <header><a class="brand" href="/materials"><span>MH</span> MaterialHub</a><div class="tagline">Local material catalogue</div></header>
+  <header><a class="brand" href="/materials"><img src="{{ url_for('static', path='mh_logo.svg') }}" alt="MaterialHub logo" class="brand-logo" width="34" height="34"> MaterialHub</a></header>
   <main>{% block content %}{% endblock %}</main>
 </body>
 </html>
