@@ -2,16 +2,24 @@
 
 from collections.abc import Generator
 from pathlib import Path
+import os
 
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
+# Configure database URL via environment variable for production use.
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DATABASE_URL = f"sqlite:///{PROJECT_ROOT / 'materials.db'}"
+DEFAULT_SQLITE = f"sqlite:///{PROJECT_ROOT / 'materials.db'}"
 
-# check_same_thread=False is required because FastAPI may use different worker
-# threads for a request. Sessions themselves are still created per request.
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+# Use `DATABASE_URL` env var if present, otherwise fallback to local SQLite.
+# For MySQL use a URL like: mysql+pymysql://user:password@host:3306/dbname
+DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_SQLITE)
+
+# For SQLite we need the `check_same_thread` connect arg; for other DBs it's
+# not applicable. Detect sqlite by scheme prefix.
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
 
