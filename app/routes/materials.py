@@ -234,7 +234,7 @@ def google_sync_materials(db: Session = Depends(get_db)):
 def _prepit_rows(db: Session) -> list[Material]:
     return list(db.scalars(
         select(Material)
-        .where(Material.prepit.is_not(None))
+        .where(Material.active.is_(True), Material.prepit.is_not(None))
         .order_by(Material.sort_order, Material.friendly_name, Material.name, Material.id)
     ))
 
@@ -242,7 +242,7 @@ def _prepit_rows(db: Session) -> list[Material]:
 def _imp_rows(db: Session) -> list[Material]:
     return list(db.scalars(
         select(Material)
-        .where(Material.imp.is_not(None))
+        .where(Material.active.is_(True), Material.imp.is_not(None))
         .order_by(Material.sort_order, Material.friendly_name, Material.name, Material.id)
     ))
 
