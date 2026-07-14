@@ -16,7 +16,6 @@ from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..google_sheets import GoogleSheetsSyncError, sync_materials_to_google_sheet
 from ..main_paths import PREPIT_TEMPLATE_RULES_PATH, PREPIT_TEMPLATES_DIR, ROOT_DIR, TEMPLATES_DIR
 from ..models import Material
 from ..prepit_export import PrepitExportError, build_prepit_xml, prepit_media_name
@@ -217,17 +216,6 @@ def export_material_files(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Export failed: {exc}") from exc
 
     query = urlencode({"notice": f"Exported files to {export_path}"})
-    return RedirectResponse(f"/materials?{query}", status_code=303)
-
-
-@router.post("/materials/google-sync")
-def google_sync_materials(db: Session = Depends(get_db)):
-    try:
-        synced_count = sync_materials_to_google_sheet(db)
-    except GoogleSheetsSyncError as exc:
-        query = urlencode({"error": str(exc)})
-    else:
-        query = urlencode({"notice": f"Google Sync updated {synced_count} materials"})
     return RedirectResponse(f"/materials?{query}", status_code=303)
 
 
