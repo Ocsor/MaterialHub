@@ -23,6 +23,32 @@ uvicorn app.main:app --reload --port 8765
 
 Open <http://127.0.0.1:8765/materials>. The database and table are created automatically at startup. API documentation is available at <http://127.0.0.1:8765/docs>.
 
+## Login
+
+MaterialHub uses two environment-configured users and does not need a user table.
+
+- `admin` can view, edit, sync, export, and download generated files.
+- `basic` can log in and view/search the materials list without edit controls.
+
+Generate password hashes from the project root:
+
+```powershell
+python -m scripts.hash_password
+```
+
+Add the generated hashes to `.env`:
+
+```env
+MATERIALHUB_SECRET_KEY=replace_with_a_long_random_secret
+MATERIALHUB_ADMIN_USERNAME=admin
+MATERIALHUB_ADMIN_PASSWORD_HASH=...
+MATERIALHUB_BASIC_USERNAME=basic
+MATERIALHUB_BASIC_PASSWORD_HASH=...
+MATERIALHUB_COOKIE_HTTPS=false
+```
+
+Set `MATERIALHUB_COOKIE_HTTPS=true` only when MaterialHub is served over HTTPS.
+
 To synchronise, select **Sync from Stocktopus** on the materials page. This calls every `/stock` page with 100 records per page. Sheet and Roll records are inserted or refreshed, missing records are marked inactive, and local fields are never overwritten. New records start with Friendly Name copied from Name; Matex is inferred when the name contains exactly one configured material keyword.
 
 To apply these defaults to blank fields in an existing database without overwriting local edits, run:

@@ -63,6 +63,23 @@ header {
   color: #9fa9bb;
 }
 
+.logout-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: #cbd3e2;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.logout-form button {
+  border-color: #ffffff2e;
+  background: #ffffff10;
+  color: #fff;
+  padding: 8px 12px;
+}
+
 main {
   max-width: 1600px;
   margin: auto;
@@ -222,6 +239,21 @@ td {
   margin: -10px 0 16px;
 }
 
+.login-panel {
+  max-width: 420px;
+  margin: 8vh auto 0;
+}
+
+.login-panel h1 {
+  margin: 0 0 18px;
+  text-align: center;
+  font-size: 30px;
+}
+
+.login-form button {
+  width: 100%;
+}
+
 .success {
   background: #e5f6ed;
   color: #17643e;
@@ -300,6 +332,10 @@ dd {
 @media (max-width: 800px) {
   header {
     padding: 0 18px;
+  }
+
+  .logout-form span {
+    display: none;
   }
 
   .tagline {

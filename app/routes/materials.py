@@ -15,6 +15,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import Session
 
+from ..auth import AuthUser, require_admin, require_login
 from ..database import get_db
 from ..main_paths import PREPIT_TEMPLATE_RULES_PATH, PREPIT_TEMPLATES_DIR, ROOT_DIR, TEMPLATES_DIR
 from ..models import Material
@@ -128,7 +129,14 @@ def _adjacent_material_ids(db: Session, material_id: int) -> tuple[int | None, i
 
 
 @router.get("/materials")
-def materials_page(request: Request, q: str = "", kind: str = "all", status: str = "active", db: Session = Depends(get_db)):
+def materials_page(
+    request: Request,
+    user: Annotated[AuthUser, Depends(require_login)],
+    q: str = "",
+    kind: str = "all",
+    status: str = "active",
+    db: Session = Depends(get_db),
+):
     statement = select(Material)
     if q.strip():
         # Match every word independently, but allow each word to occur in any
@@ -160,11 +168,12 @@ def materials_page(request: Request, q: str = "", kind: str = "all", status: str
         "kind": kind,
         "status": status,
         "prepit_copy_name": _prepit_copy_name,
+        "auth_user": user,
     })
 
 
 @router.get("/materials/download/prepit")
-def download_prepit_zip(db: Session = Depends(get_db)):
+def download_prepit_zip(_: Annotated[AuthUser, Depends(require_admin)], db: Session = Depends(get_db)):
     rows = _prepit_rows(db)
     if not rows:
         return RedirectResponse("/materials?error=No%20Prepit%20materials%20are%20checked", status_code=303)
@@ -180,7 +189,7 @@ def download_prepit_zip(db: Session = Depends(get_db)):
 
 
 @router.get("/materials/download/imp")
-def download_imp_csv(db: Session = Depends(get_db)):
+def download_imp_csv(_: Annotated[AuthUser, Depends(require_admin)], db: Session = Depends(get_db)):
     rows = _imp_rows(db)
     if not rows:
         return RedirectResponse("/materials?error=No%20IMP%20materials%20are%20checked", status_code=303)
@@ -191,7 +200,7 @@ def download_imp_csv(db: Session = Depends(get_db)):
 
 
 @router.post("/materials/export")
-def export_material_files(db: Session = Depends(get_db)):
+def export_material_files(_: Annotated[AuthUser, Depends(require_admin)], db: Session = Depends(get_db)):
     export_path = _export_path()
     prepit_rows = _prepit_rows(db)
     imp_rows = _imp_rows(db)
@@ -336,7 +345,12 @@ def _unique_zip_filename(filename: str, used_filenames: set[str]) -> str:
 
 
 @router.get("/materials/{material_id}/edit")
-def edit_page(material_id: int, request: Request, db: Session = Depends(get_db)):
+def edit_page(
+    material_id: int,
+    request: Request,
+    user: Annotated[AuthUser, Depends(require_admin)],
+    db: Session = Depends(get_db),
+):
     material = db.get(Material, material_id)
     if material is None:
         raise HTTPException(status_code=404, detail="Material not found")
@@ -346,12 +360,14 @@ def edit_page(material_id: int, request: Request, db: Session = Depends(get_db))
         "stocktopus_fields": _stocktopus_fields(material),
         "previous_id": previous_id,
         "next_id": next_id,
+        "auth_user": user,
     })
 
 
 @router.post("/materials/{material_id}/edit")
 def save_material(
     material_id: int,
+    _: Annotated[AuthUser, Depends(require_admin)],
     friendly_name: Annotated[str, Form()] = "", matex: Annotated[str, Form()] = "",
     prepit: Annotated[str, Form()] = "", imp: Annotated[str, Form()] = "",
     notes: Annotated[str, Form()] = "",
@@ -393,6 +409,7 @@ def save_material(
 def save_material_inline(
     material_id: int,
     request: Request,
+    _: Annotated[AuthUser, Depends(require_admin)],
     matex: Annotated[str, Form()] = "",
     prepit: Annotated[str, Form()] = "",
     imp: Annotated[str, Form()] = "",
